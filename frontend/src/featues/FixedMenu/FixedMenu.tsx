@@ -26,8 +26,8 @@ export const FixedMenu: React.FC = () => {
                 icon: IoHomeOutline,
             },
             {
-                title: "Stream",
-                href: "/stream",
+                title: "Radio",
+                href: "/radio",
                 icon: CiStreamOn,
             },
             {

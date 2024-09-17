@@ -1,22 +1,23 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ITrack } from "../../types/track-types";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ITrack } from '../../types/track-types';
+import { track_mock } from 'src/mocks/track-mock';
 
 interface IniitaState {
-    playNow?: ITrack | null;
+  playNow?: ITrack | null;
 }
 
 const initialState: IniitaState = {
-    playNow: null,
+  playNow: track_mock,
 };
 
 const playerSlice = createSlice({
-    name: "player",
-    initialState,
-    reducers: {
-        setPlayNows: (state, action: PayloadAction<ITrack>) => {
-            state.playNow = action.payload;
-        },
+  name: 'player',
+  initialState,
+  reducers: {
+    setPlayNows: (state, action: PayloadAction<ITrack>) => {
+      state.playNow = action.payload;
     },
+  },
 });
 
 export const { setPlayNows } = playerSlice.actions;

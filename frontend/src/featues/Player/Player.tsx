@@ -1,13 +1,12 @@
-import { track_mock } from "../../mocks/track-mock";
+import { track_mock } from "src/mocks/track-mock";
 import { FaPlayCircle } from "react-icons/fa";
 import { MdOutlineSkipPrevious, MdOutlineSkipNext } from "react-icons/md";
 import { MdShuffle } from "react-icons/md";
 import { MdRepeat } from "react-icons/md";
-import { UsePlayer } from "./UsePlayer";
+import { UsePlayer } from "./player-controls";
 import { Range } from "../Range/Range";
-import { Ref, useEffect } from "react";
-import { setPlayNows } from "../../store/slices/player-slice";
-import { useAppDispatch } from "../../store/hooks";
+import { Ref } from "react";
+import { useAppSelector } from "src/store/hooks";
 import { FaPauseCircle } from "react-icons/fa";
 import { MdOutlineQueueMusic } from "react-icons/md";
 import { MdFullscreen } from "react-icons/md";
@@ -23,6 +22,7 @@ interface Props {
 }
 
 export const Player: React.FC<Props> = ({ elementRef }) => {
+    const { playNow } = useAppSelector((state) => state.player);
     const {
         currentTime,
         duration,
@@ -30,17 +30,16 @@ export const Player: React.FC<Props> = ({ elementRef }) => {
         times,
         loadProgress,
         volume,
-        hightQuality,
+        repeat,
+        shuffle,
+        quality,
         setPlayOrPause,
-        setHightQuality,
+        setQuality,
         setVolumeOnClick,
+        setRepeat,
+        setShuffle,
         setCurrentTimeOnClick,
     } = UsePlayer();
-    const dispatch = useAppDispatch();
-
-    useEffect(() => {
-        dispatch(setPlayNows(track_mock));
-    }, []);
 
     return (
         <div
@@ -64,16 +63,25 @@ export const Player: React.FC<Props> = ({ elementRef }) => {
             </div>
             <div className="w-[40vw]">
                 <div className="m-auto w-full flex items-center justify-center">
-                    <button type="button" className="mr-4">
+                    <button
+                        type="button"
+                        className={`mr-4 ${repeat && "text-blue-400"}`}
+                        onClick={() => setRepeat(!repeat)}
+                    >
                         <MdRepeat size={22} />
                     </button>
-                    <button type="button">
+                    <button
+                        type="button"
+                        disabled={!playNow}
+                        className="disabled:text-gray-400"
+                    >
                         <MdOutlineSkipPrevious size={26} />
                     </button>
                     <button
                         type="button"
-                        className="ml-3 mr-3 hover:scale-95"
+                        className="ml-3 mr-3 hover:scale-95 disabled:text-gray-400"
                         onClick={setPlayOrPause}
+                        disabled={!playNow}
                     >
                         {paused ? (
                             <FaPlayCircle size={28} />
@@ -81,11 +89,18 @@ export const Player: React.FC<Props> = ({ elementRef }) => {
                             <FaPauseCircle size={28} />
                         )}
                     </button>
-                    <button type="button">
+                    <button
+                        type="button"
+                        disabled={!playNow}
+                        className="disabled:text-gray-400"
+                    >
                         <MdOutlineSkipNext size={26} />
                     </button>
-                    <button type="button">
-                        <MdShuffle size={22} className="ml-4" />
+                    <button type="button" onClick={() => setShuffle(!shuffle)}>
+                        <MdShuffle
+                            size={22}
+                            className={`ml-4 ${shuffle && "text-blue-400"}`}
+                        />
                     </button>
                 </div>
                 <div className="flex justify-center items-center mt-1.5">
@@ -108,18 +123,28 @@ export const Player: React.FC<Props> = ({ elementRef }) => {
                 <button
                     type="button"
                     className="mr-5"
-                    onClick={() => setHightQuality(!hightQuality)}
+                    onClick={() =>
+                        setQuality(quality === "low" ? "high" : "low")
+                    }
                 >
-                    {hightQuality ? (
+                    {quality === "high" ? (
                         <MdHighQuality size={26} />
                     ) : (
                         <MdOutlineHighQuality size={26} />
                     )}
                 </button>
-                <button type="button" className="mr-5">
+                <button
+                    type="button"
+                    className="mr-5 disabled:text-gray-400"
+                    disabled={!playNow}
+                >
                     <LiaDownloadSolid size={22} />
                 </button>
-                <button type="button" className="mr-5">
+                <button
+                    type="button"
+                    className="mr-5 disabled:text-gray-400"
+                    disabled={!playNow}
+                >
                     <MdOutlineQueueMusic size={22} />
                 </button>
 
