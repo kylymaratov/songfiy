@@ -1,19 +1,24 @@
-import { GoneException, Injectable, NotFoundException } from '@nestjs/common';
-import { MusicSearcher, TMusic } from 'src/helpers/music.searcher';
-import { SearchMusicDto } from './dto/search-music.dto';
+import {
+  GoneException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { MusicSearcher, TMusic } from 'src/modules/music/utils/music.searcher';
+import { SearchMusicDto } from './dto/search.music.dto';
 import { EntityManager, Repository } from 'typeorm';
 import { MusicEntity } from 'src/database/entities/music.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MusicDownloader } from 'src/helpers/music.downloder';
+import { TelegramStorage } from 'src/storage/telegram.storage';
 import { MusicCacheEntity } from 'src/database/entities/music.cache.entity';
 import { MusicSourceEntity } from 'src/database/entities/music.source.entity';
-import { MusicCache } from 'src/helpers/muisc.cache';
+import { MusicCacher } from 'src/modules/music/utils/music-cacher';
+import { MusicStatEntity } from 'src/database/entities/music.stat.entity';
+import { ServerLogger } from 'src/server/server.logger';
 
 @Injectable()
 export class MusicService {
-  private musicSearcher: MusicSearcher = new MusicSearcher();
-  private musicDownloder: MusicDownloader = new MusicDownloader();
-  private musicCache: MusicCache = new MusicCache();
+  private logger: ServerLogger = new ServerLogger();
 
   constructor(
     @InjectRepository(MusicEntity)
@@ -22,6 +27,12 @@ export class MusicService {
     private readonly musicCacheRepository: Repository<MusicCacheEntity>,
     @InjectRepository(MusicSourceEntity)
     private readonly musicSourceRepository: Repository<MusicSourceEntity>,
+    @InjectRepository(MusicStatEntity)
+    private readonly musicStatRepository: Repository<MusicStatEntity>,
+
+    @Inject() private musicCacher: MusicCacher,
+    @Inject() private musicSearcher: MusicSearcher,
+    @Inject() private telegramStorage: TelegramStorage,
   ) {}
 
   private async saveMusic(musics: TMusic[]) {
@@ -41,9 +52,12 @@ export class MusicService {
               status: 'saved',
             });
 
+            const newMusicStat = this.musicStatRepository.create({});
+
             const newMusic = this.musicRepository.create({
               ...music,
-              musicSource: newMusicSource,
+              source: newMusicSource,
+              stat: newMusicStat,
             });
 
             const savedMusic = await transactionalEntityManager.save(
@@ -52,16 +66,21 @@ export class MusicService {
             );
 
             newMusicSource.music = savedMusic;
+            newMusicStat.music = savedMusic;
 
             await transactionalEntityManager.save(
               MusicSourceEntity,
               newMusicSource,
             );
+            await transactionalEntityManager.save(
+              MusicStatEntity,
+              newMusicStat,
+            );
           }
         },
       );
     } catch (error) {
-      console.log(error);
+      this.logger.error(error);
     }
   }
 
@@ -80,14 +99,14 @@ export class MusicService {
   ): Promise<{ music: MusicEntity; buffer: Buffer }> {
     const music = await this.musicRepository.findOne({
       where: { musicId },
-      relations: ['musicSource', 'cache'],
+      relations: ['source', 'cache'],
     });
 
     if (!music) throw new NotFoundException();
 
-    this.musicCache.cleanOldCache(this.musicCacheRepository);
+    this.musicCacher.cleanOldCache();
 
-    if (music.musicSource?.status === 'downloading') throw new GoneException();
+    if (music.source?.status === 'downloading') throw new GoneException();
 
     if (music.cache) {
       await this.musicCacheRepository
@@ -100,28 +119,17 @@ export class MusicService {
       return { music, buffer: music.cache.buffer };
     }
 
-    if (music.musicSource?.status === 'downloaded') {
-      const buffer = await this.musicDownloder.getMusicFromTelegram(
-        music?.musicSource,
-      );
+    if (music.source?.status === 'downloaded') {
+      const buffer = await this.telegramStorage.getMusic(music?.source);
 
-      if (!music.cache) {
-        const newCache = this.musicCacheRepository.create({ buffer, music });
-
-        await this.musicCacheRepository.save(newCache);
-      }
+      if (!music.cache) await this.musicCacher.saveToCache(buffer, music);
 
       return { music, buffer };
     }
 
-    const { buffer } = await this.musicDownloder.uploadMusicToTelegram(
-      music,
-      this.musicSourceRepository,
-    );
+    const { buffer } = await this.telegramStorage.uploadMusic(music);
 
-    const newCache = this.musicCacheRepository.create({ buffer, music });
-
-    await this.musicCacheRepository.save(newCache);
+    await this.musicCacher.saveToCache(buffer, music);
 
     return { music, buffer };
   }
@@ -129,8 +137,10 @@ export class MusicService {
   async getMusicById(musicId: string) {
     const music = await this.musicRepository.findOne({
       where: { musicId },
-      relations: ['musicSource'],
+      relations: ['source'],
     });
+
+    if (!music) throw new NotFoundException();
 
     return music;
   }

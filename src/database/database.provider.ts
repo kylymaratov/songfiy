@@ -5,6 +5,7 @@ import { MusicEntity } from './entities/music.entity';
 import { ArtistEntity } from './entities/artist.entity';
 import { MusicSourceEntity } from './entities/music.source.entity';
 import { MusicCacheEntity } from './entities/music.cache.entity';
+import { MusicStatEntity } from './entities/music.stat.entity';
 
 config();
 
@@ -25,6 +26,7 @@ export const databaseProvider = [
       MusicSourceEntity,
       ArtistEntity,
       MusicCacheEntity,
+      MusicStatEntity,
     ],
   }),
 ];

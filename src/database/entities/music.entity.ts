@@ -7,8 +7,9 @@ import {
 } from 'typeorm';
 import { MusicSourceEntity } from './music.source.entity';
 import { MusicCacheEntity } from './music.cache.entity';
+import { MusicStatEntity } from './music.stat.entity';
 
-@Entity({ name: 'musics' })
+@Entity({ name: 'music' })
 export class MusicEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -38,15 +39,22 @@ export class MusicEntity {
   isOfficial: boolean;
 
   @JoinColumn()
-  @OneToOne(() => MusicSourceEntity, (musicSource) => musicSource.music, {
+  @OneToOne(() => MusicSourceEntity, (source) => source.music, {
     cascade: true,
   })
-  musicSource: MusicSourceEntity;
+  source: MusicSourceEntity;
 
   @JoinColumn()
-  @OneToOne(() => MusicCacheEntity, (file) => file.music, {
+  @OneToOne(() => MusicCacheEntity, (cache) => cache.music, {
     nullable: true,
     onDelete: 'SET NULL',
   })
   cache: MusicCacheEntity | null;
+
+  @JoinColumn()
+  @OneToOne(() => MusicStatEntity, (stat) => stat.music, {
+    cascade: true,
+    nullable: false,
+  })
+  stat: MusicStatEntity;
 }

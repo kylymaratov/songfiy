@@ -5,13 +5,14 @@ import {
   HttpCode,
   Param,
   Post,
+  Query,
   Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { MusicService } from './music.service';
-import { SearchMusicDto } from './dto/search-music.dto';
-import { GetMusicByIdDto } from './dto/get-music.dto';
+import { SearchMusicDto } from './dto/search.music.dto';
+import { GetMusicByIdParamDto } from './dto/get.music.dto';
 import { AuthorizedGuard } from 'src/guards/authorized.guard';
 import { Request, Response } from 'express';
 import { Readable } from 'stream';
@@ -29,7 +30,7 @@ export class MusicController {
   @UseGuards(AuthorizedGuard)
   @Get('info/:musicId')
   @HttpCode(200)
-  getMusicById(@Param() param: GetMusicByIdDto) {
+  getMusicById(@Param() param: GetMusicByIdParamDto) {
     const { musicId } = param;
 
     return this.musicService.getMusicById(musicId);
@@ -45,8 +46,8 @@ export class MusicController {
     const { musicId } = param;
 
     const { music, buffer } = await this.musicService.listenMusic(musicId);
-    const contentLength = music.musicSource.mediaData.audio.file_size;
-    const contentType = music.musicSource.mediaData.audio.mime_type;
+    const contentLength = music.source.mediaData.audio.file_size;
+    const contentType = music.source.mediaData.audio.mime_type;
 
     res.setHeader('Content-Type', contentType);
 

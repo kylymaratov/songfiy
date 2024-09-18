@@ -1,4 +1,4 @@
-export interface ITrack {
+export interface TMusic {
   musicId: string;
   title: string;
   originalTitle: string;

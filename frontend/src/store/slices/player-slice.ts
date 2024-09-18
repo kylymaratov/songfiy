@@ -1,20 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ITrack } from '../../types/track-types';
-import { track_mock } from 'src/mocks/track-mock';
+import { TMusic } from '../../types/music-types';
 
 interface IniitaState {
-  playNow?: ITrack | null;
+  playNow?: TMusic | null;
 }
 
 const initialState: IniitaState = {
-  playNow: track_mock,
+  playNow: null,
 };
 
 const playerSlice = createSlice({
   name: 'player',
   initialState,
   reducers: {
-    setPlayNows: (state, action: PayloadAction<ITrack>) => {
+    setPlayNows: (state, action: PayloadAction<TMusic>) => {
       state.playNow = action.payload;
     },
   },

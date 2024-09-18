@@ -1,16 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MusicCacheEntity } from 'src/database/entities/music.cache.entity';
 import { MusicEntity } from 'src/database/entities/music.entity';
 import { MusicSourceEntity } from 'src/database/entities/music.source.entity';
-import { MusicDownloader } from 'src/helpers/music.downloder';
+import { TelegramStorage } from 'src/storage/telegram.storage';
 import { ServerLogger } from 'src/server/server.logger';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class DownloadMusicCron {
-  private musicDownloader: MusicDownloader = new MusicDownloader();
   private logger: ServerLogger = new ServerLogger();
 
   constructor(
@@ -20,27 +19,9 @@ export class DownloadMusicCron {
     private musicSourceRepository: Repository<MusicSourceEntity>,
     @InjectRepository(MusicCacheEntity)
     private musicCacheRepository: Repository<MusicCacheEntity>,
+
+    @Inject() private telegramStorage: TelegramStorage,
   ) {}
-
-  @Cron('*/30 * * * * *')
-  private async cleanOldCache() {
-    try {
-      const hoursThreshold = 5;
-
-      const result = await this.musicCacheRepository
-        .createQueryBuilder()
-        .delete()
-        .from(MusicCacheEntity)
-        .where('lastAccessed < NOW() - INTERVAL :hours HOUR', {
-          hours: hoursThreshold,
-        })
-        .execute();
-
-      console.log(result);
-    } catch (error) {
-      this.logger.error('Error while clearing cache', error);
-    }
-  }
 
   @Cron('*/1 * * * *')
   private async uploadMusicTelegram() {
@@ -55,12 +36,9 @@ export class DownloadMusicCron {
 
       if (!musics.length) return;
 
-      await this.musicDownloader.uploadMusicToTelegram(
-        musics[0],
-        this.musicSourceRepository,
-      );
+      await this.telegramStorage.uploadMusic(musics[0]);
     } catch (error) {
-      this.logger.error('Error while download music', error);
+      this.logger.error(error);
     }
   }
 }

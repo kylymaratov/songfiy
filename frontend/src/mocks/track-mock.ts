@@ -1,13 +1,13 @@
-import { ITrack } from '../types/track-types';
+import { TMusic } from '../types/music-types';
 
-export const track_mock: ITrack = {
-  musicId: 'FyASdjZE0R0',
-  originalTitle: 'The Chainsmokers - Roses (Audio) ft. ROZES',
-  title: ' Rosesft. ROZES',
-  author: 'The Chainsmokers',
-  artist: 'The Chainsmokers',
-  duration: 229,
-  uploadDate: '9 years ago',
+export const song_mock: TMusic = {
+  musicId: 'KLVRvpvO0R8',
+  originalTitle: 'G-VOO, NZCH, ния - Колёса Крутятся | OST Zомбеты 2',
+  title: 'VOO, NZCH, ния ',
+  author: 'Infinity Music',
+  artist: 'G',
+  duration: 186,
+  uploadDate: '3 years ago',
   isMusic: true,
-  isOfficial: true,
+  isOfficial: false,
 };

@@ -10,7 +10,7 @@ export class ServerLogger implements LoggerService {
     console.warn(message);
   }
 
-  error(message: any, error: Error): void {
-    console.error(`Message: ${message}\nError: ${error}`);
+  error(error: Error): void {
+    console.error(`Error: ${error}`);
   }
 }

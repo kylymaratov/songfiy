@@ -1,34 +1,34 @@
 import { YoutubeAudio } from 'yt-audio-dlp';
 import { Telegraf } from 'telegraf';
 import { config } from 'dotenv';
-import { Readable, Stream } from 'stream';
-import { Message } from 'telegraf/typings/core/types/typegram';
-import { TAudio } from 'yt-audio-dlp/dist/types/audio-types';
+import { Readable } from 'stream';
 import { MusicEntity } from 'src/database/entities/music.entity';
 import { MusicSourceEntity } from 'src/database/entities/music.source.entity';
 import axios from 'axios';
 import { transliterate } from 'src/utils/transliterate';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 config();
 
-export class MusicDownloader extends YoutubeAudio {
+export class TelegramStorage extends YoutubeAudio {
   private bot: Telegraf;
   private chatId: number = Number(process.env.DB_TELEGRAM);
   private telegramDownloadUrl = `https://api.telegram.org/file/bot${process.env.BOT_TOKEN}/`;
 
-  constructor() {
+  constructor(
+    @InjectRepository(MusicSourceEntity)
+    private musicSourceRepository: Repository<MusicSourceEntity>,
+  ) {
     super();
     this.bot = new Telegraf(process.env.BOT_TOKEN);
   }
 
-  async getMusicFromTelegram(musicSource: MusicSourceEntity): Promise<Buffer> {
-    const connected = await this.checkConnection();
-
-    if (!connected) await this.bot.launch();
+  async getMusic(source: MusicSourceEntity): Promise<Buffer> {
+    await this.checkConnection();
 
     const file = await this.bot.telegram.getFile(
-      musicSource.mediaData.audio.file_id,
+      source.mediaData.audio.file_id,
     );
 
     const response = await axios.get(
@@ -41,22 +41,17 @@ export class MusicDownloader extends YoutubeAudio {
     return Buffer.from(response.data);
   }
 
-  async uploadMusicToTelegram(
-    music: MusicEntity,
-    musicSourceRepository: Repository<MusicSourceEntity>,
-  ): Promise<{ buffer: Buffer }> {
+  async uploadMusic(music: MusicEntity): Promise<{ buffer: Buffer }> {
     try {
-      await musicSourceRepository.save({
-        id: music.musicSource.id,
+      await this.musicSourceRepository.save({
+        id: music.source.id,
         sourceName: 'telegram',
         status: 'downloading',
       });
 
       const buffer = await this.downloadMusic(music.musicId);
 
-      const connected = await this.checkConnection();
-
-      if (!connected) await this.bot.launch();
+      await this.checkConnection();
 
       const mediaData = await this.bot.telegram.sendAudio(
         this.chatId,
@@ -73,16 +68,16 @@ export class MusicDownloader extends YoutubeAudio {
         },
       );
 
-      music.musicSource = await musicSourceRepository.save({
-        id: music.musicSource.id,
+      music.source = await this.musicSourceRepository.save({
+        id: music.source.id,
         mediaData,
         status: 'downloaded',
       });
 
       return { buffer };
     } catch (e) {
-      await musicSourceRepository.save({
-        id: music.musicSource.id,
+      await this.musicSourceRepository.save({
+        id: music.source.id,
         status: 'saved',
       });
 
@@ -111,9 +106,8 @@ export class MusicDownloader extends YoutubeAudio {
   private async checkConnection() {
     try {
       await this.bot.telegram.getMe();
-      return true;
     } catch (err) {
-      return false;
+      await this.bot.launch();
     }
   }
 }

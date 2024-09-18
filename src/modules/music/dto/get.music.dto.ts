@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class GetMusicByIdDto {
+export class GetMusicByIdParamDto {
   @IsNotEmpty()
   musicId: string;
 }

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { ITrack } from 'src/types/track-types';
+import { TMusic } from 'src/types/music-types';
 import { useAppSelector } from 'src/store/hooks';
-import { track_mock } from 'src/mocks/track-mock';
 
 interface Times {
   start: string;
@@ -38,7 +37,7 @@ export const UsePlayer = () => {
     setVolume(incomingVolume);
   };
 
-  const startPlayer = (track: ITrack): void => {
+  const startPlayer = (track: TMusic): void => {
     try {
       const audioSource = `http://localhost:3000/api/v1/music/listen/${track.musicId}`;
 

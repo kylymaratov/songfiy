@@ -1,11 +1,5 @@
 import { Message } from 'telegraf/typings/core/types/typegram';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { MusicEntity } from './music.entity';
 
 @Entity({ name: 'music-source' })
@@ -22,6 +16,6 @@ export class MusicSourceEntity {
   @Column({ type: 'json', nullable: true })
   mediaData: Message.AudioMessage | null;
 
-  @OneToOne(() => MusicEntity, (music) => music.musicSource)
+  @OneToOne(() => MusicEntity, (music) => music.source)
   music: MusicEntity;
 }

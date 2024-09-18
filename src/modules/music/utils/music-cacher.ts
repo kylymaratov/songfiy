@@ -1,18 +1,26 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { MusicCacheEntity } from 'src/database/entities/music.cache.entity';
+import { MusicEntity } from 'src/database/entities/music.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class MusicCache {
+export class MusicCacher {
   private maxCacheSize: number = 100;
-  async cleanOldCache(musicCacheRepository: Repository<MusicCacheEntity>) {
+
+  constructor(
+    @InjectRepository(MusicCacheEntity)
+    private musicCacheRepository: Repository<MusicCacheEntity>,
+  ) {}
+
+  async cleanOldCache() {
     try {
-      const totalCacheSize = await musicCacheRepository
+      const totalCacheSize = await this.musicCacheRepository
         .createQueryBuilder('cache')
         .getCount();
 
       if (totalCacheSize > this.maxCacheSize) {
-        const oldCacheIds = await musicCacheRepository
+        const oldCacheIds = await this.musicCacheRepository
           .createQueryBuilder('cache')
           .select('cache.id')
           .orderBy('cache.lastAccessed', 'ASC')
@@ -20,7 +28,7 @@ export class MusicCache {
           .getMany();
 
         if (oldCacheIds.length > 0) {
-          await musicCacheRepository
+          await this.musicCacheRepository
             .createQueryBuilder()
             .delete()
             .from(MusicCacheEntity)
@@ -31,5 +39,11 @@ export class MusicCache {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async saveToCache(buffer: Buffer, music: MusicEntity) {
+    const newCache = this.musicCacheRepository.create({ buffer, music });
+
+    await this.musicCacheRepository.save(newCache);
   }
 }

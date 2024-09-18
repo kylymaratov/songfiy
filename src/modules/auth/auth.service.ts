@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/database/entities/user.entity';
 import { Repository } from 'typeorm';
-import { PasswordGenerator } from 'src/helpers/password.generator';
+import { PasswordGenerator } from 'src/utils/password.generator';
 import { SignupDto } from './dto/signup-dto';
 import { Request, Response } from 'express';
 
