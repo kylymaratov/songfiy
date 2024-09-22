@@ -8,6 +8,7 @@ import axios from 'axios';
 import { transliterate } from 'src/utils/transliterate';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ServiceUnavailableException } from '@nestjs/common';
 
 config();
 
@@ -81,7 +82,7 @@ export class TelegramStorage extends YoutubeAudio {
         status: 'saved',
       });
 
-      throw e;
+      throw new ServiceUnavailableException();
     }
   }
 

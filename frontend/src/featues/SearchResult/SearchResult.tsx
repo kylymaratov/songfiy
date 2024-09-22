@@ -15,7 +15,7 @@ export const SearchResult: React.FC<Props> = ({ searchResult }) => {
     <div className="flex p-4 justify-start w-[77vw] m-auto">
       <div className="w-1/4">
         <h3 className="font-bold text-lg">#1</h3>
-        <div className="bg-slate-800 rounded-md pl-4 pt-2 pb-2 pr-4 relative">
+        <div className="bg-backgroundSecondary rounded-md pl-4 pt-2 pb-2 pr-4 relative">
           <img
             className="rounded-lg opacity-80"
             src={`https://i3.ytimg.com/vi/${searchResult[0].musicId}/hqdefault.jpg`}

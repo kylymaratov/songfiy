@@ -1,11 +1,14 @@
 import { Logo } from '../Logo/Logo';
 import { BsArrowRightShort, BsList } from 'react-icons/bs';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setOpenFloatMenu } from '../../store/slices/app-slice';
+import {
+  setOpenFloatMenu,
+  setSearchOnFocus,
+} from '../../store/slices/app-slice';
 import { MiniProfile } from '../MiniProfile/MiniProfile';
 import { Notificaiton } from '../Notification/Notification';
 import { userInfo } from '../../mocks/user-mock';
-import { Ref, useEffect, useState } from 'react';
+import { Ref, useEffect, useRef, useState } from 'react';
 import { CiSearch } from 'react-icons/ci';
 import { apiRequest } from 'src/api/api';
 import { setQuery, setSearchResult } from 'src/store/slices/search-slice';
@@ -21,6 +24,7 @@ interface Props {
 export const Navbar: React.FC<Props> = ({ upRef }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const searchRef = useRef<HTMLInputElement>(null);
 
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
 
@@ -33,19 +37,16 @@ export const Navbar: React.FC<Props> = ({ upRef }) => {
   };
 
   const goSearchPage = () => {
+    dispatch(setSearchOnFocus(true));
     navigate('/search');
   };
 
   const searchHandler = async () => {
     try {
       setSearchLoading(true);
-      const response = await apiRequest<TMusic[]>(
-        '/api/v1/music/search',
-        'POST',
-        {
-          query,
-        },
-      );
+      const response = await apiRequest<TMusic[]>('/music/search', 'POST', {
+        query,
+      });
 
       dispatch(setSearchResult(response));
     } catch (error) {
@@ -65,7 +66,7 @@ export const Navbar: React.FC<Props> = ({ upRef }) => {
   }, [query]);
 
   return (
-    <div ref={upRef} className="flex p-2 pl-4 pr-4 dark:bg-slate-800">
+    <div ref={upRef} className="flex p-2 pl-4 pr-4 bg-backgroundSecondary">
       <div className="flex justify-between items-center w-full">
         <div className="flex items-center justify-start w-[35vw]">
           <button type="button" onClick={leftMenuHandler} className="hidden">
@@ -75,14 +76,16 @@ export const Navbar: React.FC<Props> = ({ upRef }) => {
             <Logo width={30} />
           </Link>
         </div>
-        <div className="flex justify-center rounded-lg items-center w-[28vw] dark:bg-slate-900 pl-3 pr-3">
+        <div className="flex justify-center rounded-lg items-center w-[28vw] bg-background pl-3 pr-3">
           <span>
             <CiSearch size={22} />
           </span>
           <input
             onFocus={goSearchPage}
+            onBlur={() => dispatch(setSearchOnFocus(false))}
             onChange={(e) => dispatch(setQuery(e.target.value))}
             value={query}
+            ref={searchRef}
             className="ml-3 text-sm outline-none border-2 border-collapse pt-2 pb-2 bg-transparent border-none w-full"
             placeholder="Search music by title, author, keywords"
           />

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
-const api = axios.create({ baseURL: '/' });
+const api = axios.create({ baseURL: '/api/v1' });
 
 api.interceptors.request.use(
   (request) => {
@@ -29,7 +29,7 @@ type ApiResponse<T = any> = Promise<T>;
 
 export const apiRequest = async <T>(
   url: string,
-  method: RequestMethod,
+  method: RequestMethod = 'GET',
   body: ApiRequestBody = null,
   headers: Record<string, string> = {},
 ): ApiResponse<T> => {

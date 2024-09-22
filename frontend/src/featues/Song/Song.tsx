@@ -39,7 +39,7 @@ export const Song: React.FC<Props> = ({ song }) => {
         onMouseEnter={() => setShowPlayButton(true)}
         onMouseLeave={() => setShowPlayButton(false)}
       >
-        <div className="flex items-center">
+        <div className="flex items-center w-[50%]">
           <div className="relative">
             <img
               width={55}
@@ -50,7 +50,7 @@ export const Song: React.FC<Props> = ({ song }) => {
             {showPlayButton && (
               <button
                 onClick={() => dispatch(setPlayNow(song))}
-                className="absolute top-[20%] left-[30%]  bg-slate-800 p-2s rounded-full text-blue-200"
+                className="absolute top-[13%] left-[25%]  bg-background p-1 rounded-full text-blue-200"
                 type="button"
               >
                 <CiPlay1 size={22} />
@@ -61,11 +61,13 @@ export const Song: React.FC<Props> = ({ song }) => {
             className="ml-4 cursor-pointer"
             onClick={() => navigate(`/music/${song.musicId}`)}
           >
-            <p className="text-md">{song.title || 'Title unknown'}</p>
+            <p className="text-md">
+              {song.title?.slice(0, 40) || 'Title unknown'}
+            </p>
             <p className="text-sm">{song.author}</p>
           </div>
         </div>
-        <div className="text-sm flex items-center">
+        <div className="text-sm flex items-center w-[50%] justify-end">
           {song.isOfficial && (
             <IoIosStar
               size={16}
@@ -87,7 +89,7 @@ export const Song: React.FC<Props> = ({ song }) => {
               <HiOutlineDotsHorizontal size={23} />
             </button>
             <div
-              className={`${showMenu ? 'scale-1' : 'scale-0'} duration-150 w-auto -left-16 pt-3 z-10 pb-3 pl-4 pr-4 absolute flex-nowrap text-nowrap bg-slate-800 rounded-lg shadow-lg`}
+              className={`${showMenu ? 'scale-1' : 'scale-0'} duration-150 w-auto -left-16 pt-3 z-10 pb-3 pl-4 pr-4 absolute flex-nowrap text-nowrap bg-backgroundSecondary rounded-lg shadow-lg`}
               ref={ref}
             >
               <div>
@@ -103,7 +105,7 @@ export const Song: React.FC<Props> = ({ song }) => {
                   className="text-sm mt-4 text-center hover:text-blue-400 flex items-center"
                 >
                   <TfiDownload size={18} />
-                  <span className="ml-2">Download to saved</span>
+                  <span className="ml-2">Save</span>
                 </button>
               </div>
             </div>

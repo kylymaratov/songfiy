@@ -89,7 +89,7 @@ export const UsePlayer = () => {
   const handleOnError = (error: string | ErrorEvent) => {
     if (typeof error === 'string') return;
 
-    alert(error.message);
+    console.log(error);
   };
 
   const handleEnded = () => {
@@ -104,7 +104,6 @@ export const UsePlayer = () => {
     }
   }, [playNow]);
 
-  /* Effects */
   useEffect(() => {
     audioRef.current.autoplay = false;
     audioRef.current.onerror = handleOnError as OnErrorEventHandler;

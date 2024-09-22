@@ -20,7 +20,7 @@ function App() {
 
   return (
     <div className="dark">
-      <div className="fixed overflow-hidden  text-gray-50 w-screen h-screen  object-cover bg-gray-900">
+      <div className="fixed overflow-hidden  text-gray-50 w-screen h-screen  object-cover bg-background">
         <Navbar upRef={upRef} />
         <div
           className="flex w-full h-full"

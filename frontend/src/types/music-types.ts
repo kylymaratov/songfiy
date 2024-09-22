@@ -8,4 +8,8 @@ export interface TMusic {
   uploadDate: string;
   isMusic: boolean;
   isOfficial: boolean;
+  stat?: {
+    likes: number;
+    listenCount: number;
+  };
 }

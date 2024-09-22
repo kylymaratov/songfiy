@@ -1,5 +1,9 @@
 import { FaPlayCircle } from 'react-icons/fa';
-import { MdOutlineSkipPrevious, MdOutlineSkipNext } from 'react-icons/md';
+import {
+  MdOutlineSkipPrevious,
+  MdOutlineSkipNext,
+  MdOutlineFavoriteBorder,
+} from 'react-icons/md';
 import { MdShuffle } from 'react-icons/md';
 import { MdRepeat } from 'react-icons/md';
 import { UsePlayer } from './player-controls';
@@ -25,6 +29,7 @@ interface Props {
 export const Player: React.FC<Props> = ({ elementRef }) => {
   const dispatch = useAppDispatch();
 
+  const { searchOnFocus } = useAppSelector((state) => state.app);
   const { playNow, fullScreen } = useAppSelector((state) => state.player);
   const {
     currentTime,
@@ -45,21 +50,24 @@ export const Player: React.FC<Props> = ({ elementRef }) => {
   } = UsePlayer();
 
   const pauseMusic = (event: KeyboardEvent) => {
-    if (event.keyCode === 32) setPlayOrPause();
+    if (event.keyCode === 32 && !searchOnFocus) {
+      event.preventDefault();
+      setPlayOrPause();
+    }
   };
 
   useEffect(() => {
     document.addEventListener('keydown', pauseMusic);
 
     return () => document.removeEventListener('keydown', pauseMusic);
-  }, [paused]);
+  }, [paused, searchOnFocus]);
 
   return (
     <div
       ref={elementRef}
-      className={`p-2 pr-4 pl-4 ${fullScreen ? 'bg-black' : 'bg-slate-800'} w-full fixed bottom-0 left-0 bg-gray-dark flex justify-between items-center`}
+      className={`z-10 p-2 pr-4 pl-4 ${fullScreen ? 'bg-black' : 'bg-backgroundSecondary'} w-full fixed bottom-0 left-0 bg-gray-dark flex justify-between items-center`}
     >
-      <div className="flex w-[30vw] justify-start">
+      <div className="flex w-[30vw] justify-start items-center">
         {playNow && (
           <img
             src={`https://i3.ytimg.com/vi/${playNow?.musicId}/hqdefault.jpg`}
@@ -73,6 +81,15 @@ export const Player: React.FC<Props> = ({ elementRef }) => {
           <p className="text-slate-100"> {playNow?.title}</p>
           <p className="text-sm  dark:text-slate-300">{playNow?.author}</p>
         </div>
+        {playNow && (
+          <div className="ml-10">
+            <Tooltip title="Add to favorite">
+              <button className="mr-6 text-red-400">
+                <MdOutlineFavoriteBorder size={22} />
+              </button>
+            </Tooltip>
+          </div>
+        )}
       </div>
       <div className="w-[40vw]">
         <div className="m-auto w-full flex items-center justify-center">

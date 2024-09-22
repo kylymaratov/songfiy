@@ -36,6 +36,12 @@ export class MusicController {
     return this.musicService.getMusicById(musicId);
   }
 
+  @Get('/random')
+  @HttpCode(200)
+  getRandomMusic(@Query() query: { limit: number }) {
+    return this.musicService.getRandomMusic(query.limit);
+  }
+
   @Get('top')
   @HttpCode(200)
   getTopMusic(@Query() query: { limit: number }) {

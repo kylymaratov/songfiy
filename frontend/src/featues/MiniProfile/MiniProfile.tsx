@@ -17,13 +17,13 @@ export const MiniProfile: React.FC<MiniProfileProps> = ({ children }) => {
       <button
         type="button"
         onClick={showProifleHandler}
-        className="text-white bg-blue-700  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600"
+        className="text-white bg-blue-700  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center"
       >
         {children}
       </button>
 
       {showProifle && (
-        <div className="absolute z-10 right-3 top-14 w-[320px] text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm  dark:text-gray-400 dark:bg-gray-800 dark:border-gray-600">
+        <div className="absolute z-10 right-3 top-14 w-[320px] text-sm text-gray-500 transition-opacity duration-300   border   rounded-lg shadow-sm  dark:text-gray-400 bg-backgroundSecondary border-gray-600">
           <div className="p-3">
             <div className="flex items-center justify-between mb-2">
               <img

@@ -138,7 +138,7 @@ export class MusicService {
     return music;
   }
 
-  async getTopMusic(limit: number): Promise<MusicEntity[]> {
+  async getTopMusic(limit: number = 10): Promise<MusicEntity[]> {
     const musics = await this.musicRepository
       .createQueryBuilder('music')
       .leftJoinAndSelect('music.stat', 'stat')
@@ -149,11 +149,21 @@ export class MusicService {
     return musics;
   }
 
-  async getMostPlayedMusic(limit: number): Promise<MusicEntity[]> {
+  async getMostPlayedMusic(limit: number = 10): Promise<MusicEntity[]> {
     const musics = await this.musicRepository
       .createQueryBuilder('music')
       .leftJoinAndSelect('music.stat', 'stat')
       .orderBy('stat.listenCount', 'DESC')
+      .take(limit)
+      .getMany();
+
+    return musics;
+  }
+
+  async getRandomMusic(limit: number = 10) {
+    const musics = await this.musicRepository
+      .createQueryBuilder('music')
+      .orderBy('RANDOM()')
       .take(limit)
       .getMany();
 
