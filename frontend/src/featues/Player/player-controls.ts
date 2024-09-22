@@ -22,6 +22,7 @@ export const UsePlayer = () => {
   const [shuffle, setShuffle] = useState<boolean>(false);
   const [loadProgress, setLoadProgress] = useState<number>(0);
   const [quality, setQuality] = useState<Quality>('low');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { playNow } = useAppSelector((state) => state.player);
 
@@ -39,7 +40,7 @@ export const UsePlayer = () => {
 
   const startPlayer = (track: TMusic): void => {
     try {
-      const audioSource = `http://localhost:3000/api/v1/music/listen/${track.musicId}`;
+      const audioSource = `http://localhost:3000/api/v1/music/listen/${track.musicId}?quality=${quality}`;
 
       setLoadProgress(0);
 

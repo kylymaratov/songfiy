@@ -12,16 +12,15 @@ import { UsePadding } from './hooks/UsePadding';
 import './App.css';
 import { SearchPage } from './pages/SearchPage/SearchPage';
 import { Navbar } from './featues/Navbar/Navbar';
+import { FullScreen } from './components/FullScreen/FullScreen';
 
 function App() {
   UsePath();
-  const { bottomRef, upRef, padding } = UsePadding();
-
-  const { darkMode } = useAppSelector((state) => state.app);
+  const { bottomRef, upRef, padding, bottomPadding } = UsePadding();
 
   return (
-    <div className={darkMode ? 'dark' : 'light'}>
-      <div className="fixed overflow-hidden dark:text-gray-50 w-screen h-screen  object-cover bg-white dark:bg-gray-900">
+    <div className="dark">
+      <div className="fixed overflow-hidden  text-gray-50 w-screen h-screen  object-cover bg-gray-900">
         <Navbar upRef={upRef} />
         <div
           className="flex w-full h-full"
@@ -37,7 +36,10 @@ function App() {
             </Routes>
           </div>
         </div>
-        <Player elementRef={bottomRef} />
+        <div>
+          <FullScreen bottomPadding={bottomPadding} />
+          <Player elementRef={bottomRef} />
+        </div>
         <FloatMenu />
       </div>
     </div>

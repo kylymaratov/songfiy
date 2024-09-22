@@ -61,7 +61,7 @@ export const FixedMenu: React.FC = () => {
   );
 
   return (
-    <div className="p-4 h-full shadow-slate-800 shadow-md w-[300px] overflow-hidden">
+    <div className="p-4 h-full shadow-slate-800 shadow-md w-[250px] overflow-hidden">
       <p className="text-start mb-2 text-sm text-gray-400">Navigation</p>
       <div className="pt-2 pb-2">
         {menuList.map((el, key) => (

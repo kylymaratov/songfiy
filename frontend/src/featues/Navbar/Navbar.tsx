@@ -10,7 +10,7 @@ import { CiSearch } from 'react-icons/ci';
 import { apiRequest } from 'src/api/api';
 import { setQuery, setSearchResult } from 'src/store/slices/search-slice';
 import { Loading } from 'src/components/Loading/Loading';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { TMusic } from 'src/types/music-types';
 import { IoMdClose } from 'react-icons/io';
 
@@ -71,9 +71,9 @@ export const Navbar: React.FC<Props> = ({ upRef }) => {
           <button type="button" onClick={leftMenuHandler} className="hidden">
             <BsList size={26} />
           </button>
-          <a href="/" className="">
+          <Link to="/">
             <Logo width={30} />
-          </a>
+          </Link>
         </div>
         <div className="flex justify-center rounded-lg items-center w-[28vw] dark:bg-slate-900 pl-3 pr-3">
           <span>
@@ -83,7 +83,7 @@ export const Navbar: React.FC<Props> = ({ upRef }) => {
             onFocus={goSearchPage}
             onChange={(e) => dispatch(setQuery(e.target.value))}
             value={query}
-            className="ml-3 text-md outline-none border-2 border-collapse pt-2 pb-2 bg-transparent border-none w-full"
+            className="ml-3 text-sm outline-none border-2 border-collapse pt-2 pb-2 bg-transparent border-none w-full"
             placeholder="Search music by title, author, keywords"
           />
           {searchLoading && <Loading />}

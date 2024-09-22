@@ -4,8 +4,8 @@ import { MdShuffle } from 'react-icons/md';
 import { MdRepeat } from 'react-icons/md';
 import { UsePlayer } from './player-controls';
 import { Range } from '../Range/Range';
-import { Ref } from 'react';
-import { useAppSelector } from 'src/store/hooks';
+import { Ref, useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from 'src/store/hooks';
 import { FaPauseCircle } from 'react-icons/fa';
 import { MdOutlineQueueMusic } from 'react-icons/md';
 import { MdFullscreen } from 'react-icons/md';
@@ -15,13 +15,17 @@ import { FaVolumeUp } from 'react-icons/fa';
 import { FaVolumeMute } from 'react-icons/fa';
 import { LiaDownloadSolid } from 'react-icons/lia';
 import { MdHighQuality } from 'react-icons/md';
+import { setFullScreen } from 'src/store/slices/player-slice';
+import { Tooltip } from '../Tooltip/Tooltip';
 
 interface Props {
   elementRef: Ref<HTMLDivElement>;
 }
 
 export const Player: React.FC<Props> = ({ elementRef }) => {
-  const { playNow } = useAppSelector((state) => state.player);
+  const dispatch = useAppDispatch();
+
+  const { playNow, fullScreen } = useAppSelector((state) => state.player);
   const {
     currentTime,
     duration,
@@ -40,10 +44,20 @@ export const Player: React.FC<Props> = ({ elementRef }) => {
     setCurrentTimeOnClick,
   } = UsePlayer();
 
+  const pauseMusic = (event: KeyboardEvent) => {
+    if (event.keyCode === 32) setPlayOrPause();
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', pauseMusic);
+
+    return () => document.removeEventListener('keydown', pauseMusic);
+  }, [paused]);
+
   return (
     <div
       ref={elementRef}
-      className="p-2 pr-4 pl-4 dark:bg-slate-800 w-full fixed bottom-0 left-0 bg-gray-dark flex justify-between items-center"
+      className={`p-2 pr-4 pl-4 ${fullScreen ? 'bg-black' : 'bg-slate-800'} w-full fixed bottom-0 left-0 bg-gray-dark flex justify-between items-center`}
     >
       <div className="flex w-[30vw] justify-start">
         {playNow && (
@@ -55,7 +69,7 @@ export const Player: React.FC<Props> = ({ elementRef }) => {
             className="rounded-md"
           />
         )}
-        <div className="ml-2">
+        <div className="ml-4">
           <p className="text-slate-100"> {playNow?.title}</p>
           <p className="text-sm  dark:text-slate-300">{playNow?.author}</p>
         </div>
@@ -99,7 +113,7 @@ export const Player: React.FC<Props> = ({ elementRef }) => {
           </button>
         </div>
         <div className="flex justify-center items-center mt-1.5">
-          <span className="text-sm font-thin text-slate-300 mr-3">
+          <span className="text-sm font-normal text-slate-300 mr-3">
             {times.start}
           </span>
           <Range
@@ -109,37 +123,43 @@ export const Player: React.FC<Props> = ({ elementRef }) => {
             max={duration}
             onChange={setCurrentTimeOnClick}
           />
-          <span className="text-sm font-thin text-slate-300 ml-3">
+          <span className="text-sm font-normal text-slate-300 ml-3">
             -{times.end}
           </span>
         </div>
       </div>
       <div className="flex w-[30vw] justify-end items-center">
-        <button
-          type="button"
-          className="mr-5"
-          onClick={() => setQuality(quality === 'low' ? 'high' : 'low')}
-        >
-          {quality === 'high' ? (
-            <MdHighQuality size={26} />
-          ) : (
-            <MdOutlineHighQuality size={26} />
-          )}
-        </button>
-        <button
-          type="button"
-          className="mr-5 disabled:text-gray-400"
-          disabled={!playNow}
-        >
-          <LiaDownloadSolid size={22} />
-        </button>
-        <button
-          type="button"
-          className="mr-5 disabled:text-gray-400"
-          disabled={!playNow}
-        >
-          <MdOutlineQueueMusic size={22} />
-        </button>
+        <Tooltip title="Quality">
+          <button
+            type="button"
+            className="mr-5"
+            onClick={() => setQuality(quality === 'low' ? 'high' : 'low')}
+          >
+            {quality === 'high' ? (
+              <MdHighQuality size={26} />
+            ) : (
+              <MdOutlineHighQuality size={26} />
+            )}
+          </button>
+        </Tooltip>
+        <Tooltip title="Save">
+          <button
+            type="button"
+            className="mr-5 disabled:text-gray-400"
+            disabled={!playNow}
+          >
+            <LiaDownloadSolid size={22} />
+          </button>
+        </Tooltip>
+        <Tooltip title="Queue">
+          <button
+            type="button"
+            className="mr-5 disabled:text-gray-400"
+            disabled={!playNow}
+          >
+            <MdOutlineQueueMusic size={22} />
+          </button>
+        </Tooltip>
 
         <div className="mr-5 flex items-center">
           <button
@@ -164,7 +184,12 @@ export const Player: React.FC<Props> = ({ elementRef }) => {
             onChange={setVolumeOnClick}
           />
         </div>
-        <button type="button" className="">
+        <button
+          type="button"
+          disabled={!playNow}
+          className="disabled:text-gray-400"
+          onClick={() => dispatch(setFullScreen(!fullScreen))}
+        >
           <MdFullscreen size={20} />
         </button>
       </div>

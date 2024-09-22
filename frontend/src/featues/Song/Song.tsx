@@ -10,6 +10,7 @@ import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import { UseVisible } from 'src/hooks/UseVisible';
 import { TfiDownload } from 'react-icons/tfi';
 import { MdOutlinePlaylistAdd } from 'react-icons/md';
+import { Tooltip } from '../Tooltip/Tooltip';
 
 interface Props {
   song: TMusic;
@@ -60,7 +61,7 @@ export const Song: React.FC<Props> = ({ song }) => {
             className="ml-4 cursor-pointer"
             onClick={() => navigate(`/music/${song.musicId}`)}
           >
-            <p className="font-bold text-sm">{song.title || 'Title unknown'}</p>
+            <p className="text-md">{song.title || 'Title unknown'}</p>
             <p className="text-sm">{song.author}</p>
           </div>
         </div>
@@ -73,41 +74,39 @@ export const Song: React.FC<Props> = ({ song }) => {
             />
           )}
           <p className="mr-4">{song.uploadDate}</p>
-          <button className="mr-6 text-red-400">
-            <MdOutlineFavoriteBorder size={22} />
-          </button>
+          <Tooltip title="Add to favorite">
+            <button className="mr-6 text-red-400">
+              <MdOutlineFavoriteBorder size={22} />
+            </button>
+          </Tooltip>
 
-          <p className="font-bold mr-5">
-            {handleFormatDuration(song.duration)}
-          </p>
+          <p className="mr-5">{handleFormatDuration(song.duration)}</p>
 
           <div className="relative">
             <button type="button" onClick={() => setShowMenu(!showMenu)}>
               <HiOutlineDotsHorizontal size={23} />
             </button>
-            {showMenu && (
-              <div
-                className="-left-16 pt-3 z-10 pb-3 pl-4 pr-4 absolute w-[180px] bg-slate-800 rounded-lg shadow-lg"
-                ref={ref}
-              >
-                <div>
-                  <button
-                    type="button"
-                    className="text-md mt-2 text-center   hover:text-blue-400 flex"
-                  >
-                    <MdOutlinePlaylistAdd size={18} />
-                    <span className="ml-2">Add to playlist</span>
-                  </button>
-                  <button
-                    type="button"
-                    className="text-md mt-4 text-center   hover:text-blue-400 flex"
-                  >
-                    <TfiDownload size={15} />
-                    <span className="ml-2">Download to saved</span>
-                  </button>
-                </div>
+            <div
+              className={`${showMenu ? 'scale-1' : 'scale-0'} duration-150 w-auto -left-16 pt-3 z-10 pb-3 pl-4 pr-4 absolute flex-nowrap text-nowrap bg-slate-800 rounded-lg shadow-lg`}
+              ref={ref}
+            >
+              <div>
+                <button
+                  type="button"
+                  className="text-sm mt-2  hover:text-blue-400 flex items-center"
+                >
+                  <MdOutlinePlaylistAdd size={20} />
+                  <span className="ml-2">Add to playlist</span>
+                </button>
+                <button
+                  type="button"
+                  className="text-sm mt-4 text-center hover:text-blue-400 flex items-center"
+                >
+                  <TfiDownload size={18} />
+                  <span className="ml-2">Download to saved</span>
+                </button>
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
