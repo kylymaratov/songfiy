@@ -91,6 +91,10 @@ export const UsePlayer = () => {
     alert(error.message);
   };
 
+  const handleEnded = () => {
+    setPaused(true);
+  };
+
   useEffect(() => {
     if (playNow) {
       startPlayer(playNow);
@@ -104,6 +108,7 @@ export const UsePlayer = () => {
     audioRef.current.autoplay = false;
     audioRef.current.onerror = handleOnError as OnErrorEventHandler;
     audioRef.current.ontimeupdate = handleTimeUpdate;
+    audioRef.current.onended = handleEnded;
   }, []);
 
   useEffect(() => {

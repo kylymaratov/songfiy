@@ -1,7 +1,8 @@
-import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Request } from 'express';
 import { AuthorizedGuard } from 'src/guards/authorized.guard';
+import { UserEntity } from 'src/database/entities/user.entity';
 
 @UseGuards(AuthorizedGuard)
 @Controller({ path: '/api/v1/users', version: 'v1' })

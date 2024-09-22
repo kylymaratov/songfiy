@@ -10,7 +10,10 @@ export class UsersService {
   ) {}
 
   async getUserById(id: number): Promise<UserEntity | null> {
-    const user = this.userRepostiry.findOne({ where: { id } });
+    const user = await this.userRepostiry.findOne({
+      where: { id },
+      relations: ['data', 'info'],
+    });
 
     return user;
   }

@@ -7,7 +7,6 @@ export class SignupDto {
   @IsByteLength(8, 100)
   password: string;
 
-  @IsNotEmpty()
   firstname: string;
 
   lastname: string;

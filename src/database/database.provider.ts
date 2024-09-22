@@ -1,32 +1,23 @@
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
-import { UserEntity } from './entities/user.entity';
-import { MusicEntity } from './entities/music.entity';
-import { ArtistEntity } from './entities/artist.entity';
-import { MusicSourceEntity } from './entities/music.source.entity';
-import { MusicCacheEntity } from './entities/music.cache.entity';
-import { MusicStatEntity } from './entities/music.stat.entity';
+import { join } from 'path';
 
 config();
 
 const env = process.env;
 
-export const databaseProvider = [
-  TypeOrmModule.forRoot({
-    type: 'postgres',
-    host: env.DB_HOST,
-    port: Number(env.DB_PORT),
-    username: env.DB_USERNAME,
-    password: env.DB_PASSWORD,
-    database: env.DB_NAME,
-    synchronize: true,
-    entities: [
-      UserEntity,
-      MusicEntity,
-      MusicSourceEntity,
-      ArtistEntity,
-      MusicCacheEntity,
-      MusicStatEntity,
-    ],
-  }),
-];
+const AppDataSource = new DataSource({
+  type: 'postgres',
+  host: env.DB_HOST,
+  port: Number(env.DB_PORT),
+  username: env.DB_USERNAME,
+  password: env.DB_PASSWORD,
+  database: env.DB_NAME,
+  synchronize: false,
+  migrationsTableName: 'typeorm_migrations',
+  migrationsRun: false,
+  entities: [join(__dirname, 'entities', '*.entity.{ts,js}')],
+  migrations: [join(__dirname, 'migrations', '*.{ts,js}')],
+});
+
+export default AppDataSource;

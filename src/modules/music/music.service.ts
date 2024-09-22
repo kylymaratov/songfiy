@@ -64,18 +64,6 @@ export class MusicService {
               MusicEntity,
               newMusic,
             );
-
-            newMusicSource.music = savedMusic;
-            newMusicStat.music = savedMusic;
-
-            await transactionalEntityManager.save(
-              MusicSourceEntity,
-              newMusicSource,
-            );
-            await transactionalEntityManager.save(
-              MusicStatEntity,
-              newMusicStat,
-            );
           }
         },
       );
@@ -99,10 +87,15 @@ export class MusicService {
   ): Promise<{ music: MusicEntity; buffer: Buffer }> {
     const music = await this.musicRepository.findOne({
       where: { musicId },
-      relations: ['source', 'cache'],
+      relations: ['source', 'cache', 'stat'],
     });
 
     if (!music) throw new NotFoundException();
+
+    await this.musicStatRepository.save({
+      id: music.stat.id,
+      listenCount: music.stat.listenCount + 1,
+    });
 
     this.musicCacher.cleanOldCache();
 
@@ -143,5 +136,27 @@ export class MusicService {
     if (!music) throw new NotFoundException();
 
     return music;
+  }
+
+  async getTopMusic(limit: number): Promise<MusicEntity[]> {
+    const musics = await this.musicRepository
+      .createQueryBuilder('music')
+      .leftJoinAndSelect('music.stat', 'stat')
+      .orderBy('stat.likes', 'DESC')
+      .take(limit)
+      .getMany();
+
+    return musics;
+  }
+
+  async getMostPlayedMusic(limit: number): Promise<MusicEntity[]> {
+    const musics = await this.musicRepository
+      .createQueryBuilder('music')
+      .leftJoinAndSelect('music.stat', 'stat')
+      .orderBy('stat.listenCount', 'DESC')
+      .take(limit)
+      .getMany();
+
+    return musics;
   }
 }

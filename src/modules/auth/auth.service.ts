@@ -10,6 +10,8 @@ import { Repository } from 'typeorm';
 import { PasswordGenerator } from 'src/utils/password.generator';
 import { SignupDto } from './dto/signup-dto';
 import { Request, Response } from 'express';
+import { UserDataEntity } from 'src/database/entities/user.data.entity';
+import { UserInfoEntity } from 'src/database/entities/user.info.entity';
 
 @Injectable()
 export class AuthService {
@@ -18,12 +20,17 @@ export class AuthService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepostiory: Repository<UserEntity>,
+    @InjectRepository(UserDataEntity)
+    private readonly userDataRepositry: Repository<UserDataEntity>,
+
+    @InjectRepository(UserInfoEntity)
+    private readonly userInfoRepository: Repository<UserInfoEntity>,
   ) {
     this.passwordGenerator = new PasswordGenerator();
   }
 
   async createUser(body: SignupDto): Promise<UserEntity> {
-    const { email, password, firstname, lastname = '' } = body;
+    const { email, password, firstname, lastname } = body;
 
     const candidate = await this.userRepostiory.findOne({ where: { email } });
 
@@ -31,11 +38,14 @@ export class AuthService {
 
     const hashedPassword = await this.passwordGenerator.generate(password);
 
+    const data = this.userDataRepositry.create({});
+    const info = this.userInfoRepository.create({ firstname, lastname });
+
     const user = this.userRepostiory.create({
       email,
-      firstname,
-      lastname,
       password: hashedPassword,
+      data,
+      info,
     });
 
     const savedUser = await this.userRepostiory.save(user);

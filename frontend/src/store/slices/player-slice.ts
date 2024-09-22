@@ -13,11 +13,11 @@ const playerSlice = createSlice({
   name: 'player',
   initialState,
   reducers: {
-    setPlayNows: (state, action: PayloadAction<TMusic>) => {
+    setPlayNow: (state, action: PayloadAction<TMusic>) => {
       state.playNow = action.payload;
     },
   },
 });
 
-export const { setPlayNows } = playerSlice.actions;
+export const { setPlayNow } = playerSlice.actions;
 export const playerReducer = playerSlice.reducer;

@@ -52,7 +52,7 @@ export class MusicSearcher extends Client {
 
     return {
       author,
-      title: clearedOriginalTitle[1],
+      title: clearedOriginalTitle[1]?.trim(),
       artist: clearedOriginalTitle[0].trim() || 'Unknown',
     };
   }

@@ -1,9 +1,11 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { MusicSourceEntity } from './music.source.entity';
 import { MusicCacheEntity } from './music.cache.entity';
@@ -40,7 +42,8 @@ export class MusicEntity {
 
   @JoinColumn()
   @OneToOne(() => MusicSourceEntity, (source) => source.music, {
-    cascade: true,
+    cascade: ['insert', 'remove'],
+    nullable: false,
   })
   source: MusicSourceEntity;
 
@@ -53,8 +56,14 @@ export class MusicEntity {
 
   @JoinColumn()
   @OneToOne(() => MusicStatEntity, (stat) => stat.music, {
-    cascade: true,
+    cascade: ['insert', 'remove'],
     nullable: false,
   })
   stat: MusicStatEntity;
+
+  @CreateDateColumn()
+  created: Date;
+
+  @UpdateDateColumn()
+  updated: Date;
 }

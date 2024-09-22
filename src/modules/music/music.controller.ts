@@ -36,6 +36,18 @@ export class MusicController {
     return this.musicService.getMusicById(musicId);
   }
 
+  @Get('top')
+  @HttpCode(200)
+  getTopMusic(@Query() query: { limit: number }) {
+    return this.musicService.getTopMusic(query.limit);
+  }
+
+  @Get('most-played')
+  @HttpCode(200)
+  getMostPlayedMusic(@Query() query: { limit: number }) {
+    return this.musicService.getMostPlayedMusic(query.limit);
+  }
+
   @Get('listen/:musicId')
   @HttpCode(206)
   async listenMusic(

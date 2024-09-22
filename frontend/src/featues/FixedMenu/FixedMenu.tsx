@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
-import { IoHomeOutline } from 'react-icons/io5';
 import { CiStreamOn } from 'react-icons/ci';
-import { MdOutlineHistory } from 'react-icons/md';
 import { CiCloudOn } from 'react-icons/ci';
 import { IconType } from 'react-icons';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../store/hooks';
+import { CiSearch, CiHome } from 'react-icons/ci';
+import { PiPlaylistDuotone } from 'react-icons/pi';
 
 interface MenuList {
   title: string;
@@ -23,22 +23,33 @@ export const FixedMenu: React.FC = () => {
       {
         title: 'Home',
         href: '/',
-        icon: IoHomeOutline,
+        icon: CiHome,
       },
       {
         title: 'Search',
         href: '/search',
-        icon: CiCloudOn,
+        icon: CiSearch,
       },
       {
         title: 'Radio',
         href: '/radio',
         icon: CiStreamOn,
       },
+    ],
+    [],
+  );
+
+  const menuList2: MenuList[] = useMemo(
+    () => [
       {
-        title: 'History',
-        href: '/history',
-        icon: MdOutlineHistory,
+        title: 'Playlists',
+        href: '/my-playlists',
+        icon: PiPlaylistDuotone,
+      },
+      {
+        title: 'Favorite',
+        href: '/favorite',
+        icon: CiCloudOn,
       },
       {
         title: 'Saved',
@@ -50,13 +61,29 @@ export const FixedMenu: React.FC = () => {
   );
 
   return (
-    <div className="p-4 h-full shadow-slate-800 shadow-md w-[220px] overflow-hidden">
-      <div className="pt-2 pb-2 border-b-2 border-b-slate-800">
+    <div className="p-4 h-full shadow-slate-800 shadow-md w-[300px] overflow-hidden">
+      <p className="text-start mb-2 text-sm text-gray-400">Navigation</p>
+      <div className="pt-2 pb-2">
         {menuList.map((el, key) => (
           <div
             onClick={() => navigate(el.href)}
             key={key}
-            className={`first:mt-0 flex p-2 items-center hover:dark:bg-gray-800 mt-1 rounded-md cursor-pointer ${
+            className={`first:mt-0 flex p-2 items-center hover:dark:bg-gray-800 mt-2 mb-2 rounded-md cursor-pointer ${
+              currentLocation === el.href ? 'dark:bg-gray-800' : ''
+            }`}
+          >
+            <el.icon size={21} />
+            <span className="ml-5 text-gray-300 text-sm">{el.title}</span>
+          </div>
+        ))}
+      </div>
+      <p className="text-start text-sm text-gray-400">Playlist and favorite</p>
+      <div className="pt-2 pb-2 border-b-2 border-b-slate-800">
+        {menuList2.map((el, key) => (
+          <div
+            onClick={() => navigate(el.href)}
+            key={key}
+            className={`flex p-2 items-center hover:dark:bg-gray-800 mt-2 mb-2 rounded-md cursor-pointer ${
               currentLocation === el.href ? 'dark:bg-gray-800' : ''
             }`}
           >

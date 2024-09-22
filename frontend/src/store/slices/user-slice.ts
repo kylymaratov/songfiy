@@ -5,7 +5,7 @@ interface IniitaState {
 }
 
 const initialState: IniitaState = {
-  isAuth: false,
+  isAuth: true,
 };
 
 const userSlice = createSlice({
