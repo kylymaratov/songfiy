@@ -1,17 +1,25 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export interface TSettings {
+  language: 'en' | 'ru' | 'kg';
+}
+
 interface IniitaState {
   darkMode: boolean;
-  openFloatMenu: boolean;
+  settings: TSettings;
+  showSettings: boolean;
   currentLocation: string;
-  searchOnFocus: boolean;
+  searchFocus: boolean;
 }
 
 const initialState: IniitaState = {
   darkMode: true,
-  openFloatMenu: false,
   currentLocation: '',
-  searchOnFocus: false,
+  settings: {
+    language: 'en',
+  },
+  searchFocus: false,
+  showSettings: false,
 };
 
 const appSlice = createSlice({
@@ -21,22 +29,23 @@ const appSlice = createSlice({
     setDarkMode: (state, action: PayloadAction<boolean>) => {
       state.darkMode = action.payload;
     },
-    setOpenFloatMenu: (state, action: PayloadAction<boolean>) => {
-      state.openFloatMenu = action.payload;
-    },
+
     setCurrentLocation: (state, action: PayloadAction<string>) => {
       state.currentLocation = action.payload;
     },
-    setSearchOnFocus: (state, action: PayloadAction<boolean>) => {
-      state.searchOnFocus = action.payload;
+    setSearchFocus: (state, action: PayloadAction<boolean>) => {
+      state.searchFocus = action.payload;
+    },
+    setShowSettings: (state, action: PayloadAction<boolean>) => {
+      state.showSettings = action.payload;
     },
   },
 });
 
 export const {
   setDarkMode,
-  setOpenFloatMenu,
   setCurrentLocation,
-  setSearchOnFocus,
+  setSearchFocus,
+  setShowSettings,
 } = appSlice.actions;
 export const appReducer = appSlice.reducer;

@@ -3,7 +3,7 @@ import { apiRequest } from 'src/api/api';
 import MainBanner from 'src/assets/banner.png';
 import { FaArrowRight } from 'react-icons/fa6';
 import { TMusic } from 'src/types/music-types';
-import { Song } from 'src/featues/Song/Song';
+import { LineSong } from 'src/featues/Song/LineSong';
 import { SiNeteasecloudmusic } from 'react-icons/si';
 import { Footer } from 'src/featues/Footer/Footer';
 import { RxUpdate } from 'react-icons/rx';
@@ -126,8 +126,11 @@ export const HomePage: React.FC = () => {
           <div className="w-[48%]">
             {randomMusic.length
               ? randomMusic.slice(0, 5).map((song, id) => (
-                  <div className="mt-2 " key={id}>
-                    <Song song={song} />
+                  <div className="mt-2 flex items-center" key={id}>
+                    <span className="text-sm font-bold">#{id + 1}</span>
+                    <div className="w-full ml-1">
+                      <LineSong song={song} />
+                    </div>
                   </div>
                 ))
               : null}
@@ -135,8 +138,11 @@ export const HomePage: React.FC = () => {
           <div className="w-[48%]">
             {randomMusic.length
               ? randomMusic.slice(5, randomMusic.length).map((song, id) => (
-                  <div className="mt-2 " key={id}>
-                    <Song song={song} />
+                  <div className="mt-2 flex items-center" key={id}>
+                    <span className="text-sm font-bold">#{id + 6}</span>
+                    <div className="w-full ml-1">
+                      <LineSong song={song} />
+                    </div>
                   </div>
                 ))
               : null}

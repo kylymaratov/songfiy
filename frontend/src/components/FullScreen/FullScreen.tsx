@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/store/hooks';
+import { setShowSettings } from 'src/store/slices/app-slice';
 import { setFullScreen } from 'src/store/slices/player-slice';
 
 interface Props {
@@ -9,11 +10,16 @@ interface Props {
 export const FullScreen: React.FC<Props> = ({ bottomPadding }) => {
   const dispatch = useAppDispatch();
   const { fullScreen, playNow } = useAppSelector((state) => state.player);
+  const { showSettings } = useAppSelector((state) => state.app);
 
   const closeFullscreen = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && fullScreen) {
       event.preventDefault();
       dispatch(setFullScreen(false));
+    }
+    if (event.key === 'Escape' && showSettings) {
+      event.preventDefault();
+      dispatch(setShowSettings(false));
     }
   };
 
@@ -21,7 +27,7 @@ export const FullScreen: React.FC<Props> = ({ bottomPadding }) => {
     document.addEventListener('keydown', closeFullscreen);
 
     return () => document.removeEventListener('keydown', closeFullscreen);
-  }, [fullScreen]);
+  }, [fullScreen, showSettings]);
 
   return (
     <div

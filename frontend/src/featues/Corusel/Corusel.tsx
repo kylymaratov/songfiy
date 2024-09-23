@@ -17,6 +17,9 @@ export const Corusel: React.FC<Props> = ({
 }) => {
   const swiperRef = useRef<any>(null);
 
+  if (!songs.length)
+    return <div className="text-center">There is currently no content</div>;
+
   return (
     <div className="flex items-center relative">
       <button className="absolute -left-8">
@@ -30,15 +33,13 @@ export const Corusel: React.FC<Props> = ({
         spaceBetween={spaceBetween}
         slidesPerView={slidePreView}
       >
-        {songs.length
-          ? songs.map((song, id) => (
-              <SwiperSlide key={id}>
-                <div className="mt-2 flex items-center">
-                  <SquareSong song={song} />
-                </div>
-              </SwiperSlide>
-            ))
-          : null}
+        {songs.map((song, id) => (
+          <SwiperSlide key={id}>
+            <div className="mt-2 flex items-center">
+              <SquareSong song={song} />
+            </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
       <button className="absolute -right-8">
         <MdNavigateNext

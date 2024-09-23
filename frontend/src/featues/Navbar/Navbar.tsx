@@ -1,10 +1,7 @@
 import { Logo } from '../Logo/Logo';
 import { BsArrowRightShort, BsList } from 'react-icons/bs';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import {
-  setOpenFloatMenu,
-  setSearchOnFocus,
-} from '../../store/slices/app-slice';
+import { setSearchFocus } from '../../store/slices/app-slice';
 import { MiniProfile } from '../MiniProfile/MiniProfile';
 import { Notificaiton } from '../Notification/Notification';
 import { userInfo } from '../../mocks/user-mock';
@@ -29,15 +26,10 @@ export const Navbar: React.FC<Props> = ({ upRef }) => {
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
 
   const { query } = useAppSelector((state) => state.search);
-  const { openFloatMenu } = useAppSelector((state) => state.app);
   const { isAuth } = useAppSelector((state) => state.user);
 
-  const leftMenuHandler = () => {
-    dispatch(setOpenFloatMenu(!openFloatMenu));
-  };
-
   const goSearchPage = () => {
-    dispatch(setSearchOnFocus(true));
+    dispatch(setSearchFocus(true));
     navigate('/search');
   };
 
@@ -69,9 +61,6 @@ export const Navbar: React.FC<Props> = ({ upRef }) => {
     <div ref={upRef} className="flex p-2 pl-4 pr-4 bg-backgroundSecondary">
       <div className="flex justify-between items-center w-full">
         <div className="flex items-center justify-start w-[35vw]">
-          <button type="button" onClick={leftMenuHandler} className="hidden">
-            <BsList size={26} />
-          </button>
           <Link to="/">
             <Logo width={30} />
           </Link>
@@ -82,7 +71,7 @@ export const Navbar: React.FC<Props> = ({ upRef }) => {
           </span>
           <input
             onFocus={goSearchPage}
-            onBlur={() => dispatch(setSearchOnFocus(false))}
+            onBlur={() => dispatch(setSearchFocus(false))}
             onChange={(e) => dispatch(setQuery(e.target.value))}
             value={query}
             ref={searchRef}

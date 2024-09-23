@@ -35,7 +35,7 @@ export const SquareSong: React.FC<Props> = ({ song }) => {
           </button>
         )}
       </div>
-      <div className="mt-5">
+      <div className="mt-5s">
         <p className="text-[15px]">
           {song.title?.slice(0, 25) || 'Title unknown'}
         </p>

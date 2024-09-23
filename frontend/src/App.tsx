@@ -1,5 +1,3 @@
-import { useAppSelector } from './store/hooks';
-import { FloatMenu } from './featues/FloatMenu/FloatMenu';
 import { FixedMenu } from './featues/FixedMenu/FixedMenu';
 import { UsePath } from './hooks/UsePath';
 import { Route, Routes } from 'react-router-dom';
@@ -13,6 +11,7 @@ import './App.css';
 import { SearchPage } from './pages/SearchPage/SearchPage';
 import { Navbar } from './featues/Navbar/Navbar';
 import { FullScreen } from './components/FullScreen/FullScreen';
+import { Settings } from './featues/Settings/Settings';
 
 function App() {
   UsePath();
@@ -40,7 +39,7 @@ function App() {
           <FullScreen bottomPadding={bottomPadding} />
           <Player elementRef={bottomRef} />
         </div>
-        <FloatMenu />
+        <Settings />
       </div>
     </div>
   );

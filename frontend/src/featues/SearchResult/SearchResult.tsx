@@ -1,7 +1,7 @@
 import { useAppDispatch } from 'src/store/hooks';
 import { CiPlay1 } from 'react-icons/ci';
 import { setPlayNow } from 'src/store/slices/player-slice';
-import { Song } from 'src/featues/Song/Song';
+import { LineSong } from 'src/featues/Song/LineSong';
 import { TMusic } from 'src/types/music-types';
 
 interface Props {
@@ -37,7 +37,7 @@ export const SearchResult: React.FC<Props> = ({ searchResult }) => {
             <div key={song.musicId} className="mt-3 flex items-center">
               <p className="font-bold text-sm">#{id + 2}</p>
               <div className="ml-1 w-full">
-                <Song song={song} />
+                <LineSong song={song} />
               </div>
             </div>
           ))}

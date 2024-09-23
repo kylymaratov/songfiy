@@ -1,3 +1,14 @@
-export const Helemt: React.FC = () => {
-    return <div className="fixed inset-0 bg-gray-900 opacity-60 z-10"></div>;
+import { ReactNode, useMemo } from 'react';
+
+interface Props {
+  children: ReactNode;
+}
+
+export const Helemt: React.FC<Props> = ({ children }) => {
+  return (
+    <div className={`fixed inset-0 w-full h-full z-10 duration-200`}>
+      <div className="absolute w-full h-full bg-background opacity-70" />
+      <div className="relative w-full h-full">{children}</div>
+    </div>
+  );
 };

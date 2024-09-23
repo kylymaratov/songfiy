@@ -3,10 +3,12 @@ import { CiStreamOn } from 'react-icons/ci';
 import { CiCloudOn } from 'react-icons/ci';
 import { IconType } from 'react-icons';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { CiSearch, CiHome } from 'react-icons/ci';
 import { PiPlaylistDuotone } from 'react-icons/pi';
 import { RiCompassDiscoverLine } from 'react-icons/ri';
+import { IoSettingsSharp } from 'react-icons/io5';
+import { setShowSettings } from 'src/store/slices/app-slice';
 
 interface MenuList {
   title: string;
@@ -17,7 +19,7 @@ interface MenuList {
 
 export const FixedMenu: React.FC = () => {
   const navigate = useNavigate();
-
+  const dispatch = useAppDispatch();
   const { currentLocation } = useAppSelector((state) => state.app);
 
   const menuList: MenuList[] = useMemo(
@@ -73,7 +75,7 @@ export const FixedMenu: React.FC = () => {
 
   return (
     <div
-      className={`p-4 h-full shadow-[0px_0_5px_0_rgba(100,116,139,0.5)] w-[250px] overflow-hidden`}
+      className={`p-4 h-full shadow-[0px_0_5px_0_rgba(100,116,139,0.5)] w-[250px] overflow-hidden relative`}
     >
       <p className="text-start mb-2 text-sm text-gray-400">Navigation</p>
       <div className="pt-2 pb-2">
@@ -107,6 +109,19 @@ export const FixedMenu: React.FC = () => {
             <span className="ml-5 text-gray-300 text-sm">{el.title}</span>
           </div>
         ))}
+      </div>
+      <div>
+        <div className="absolute bottom-5 w-full left-0">
+          <div className="pl-6 pr-4">
+            <button
+              className="flex items-center text-gray-200 w-full p-1 rounded-md"
+              onClick={() => dispatch(setShowSettings(true))}
+            >
+              <IoSettingsSharp size={20} />
+              <span className="ml-4 text-sm">Settings</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ interface Props {
   song: TMusic;
 }
 
-export const Song: React.FC<Props> = ({ song }) => {
+export const LineSong: React.FC<Props> = ({ song }) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -62,7 +62,7 @@ export const Song: React.FC<Props> = ({ song }) => {
             onClick={() => navigate(`/music/${song.musicId}`)}
           >
             <p className="text-md">
-              {song.title?.slice(0, 40) || 'Title unknown'}
+              {song.title?.slice(0, 25) || 'Title unknown'}
             </p>
             <p className="text-sm">{song.author}</p>
           </div>

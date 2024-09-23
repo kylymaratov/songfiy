@@ -7,7 +7,7 @@ export const Footer: React.FC = () => {
     <div>
       <div className="flex items-center justify-around">
         <div className="w-[30%] mt-5 mb-5">
-          <Link to="/about" style={{ fontSize: 22, fontWeight: 'bold' }}>
+          <Link to="/about" style={{ fontSize: 18, fontWeight: 'bold' }}>
             About
           </Link>
           <p className="text=[12px] text-gray-300">
