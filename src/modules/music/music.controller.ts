@@ -27,6 +27,11 @@ export class MusicController {
     return this.musicService.searchMusic(body);
   }
 
+  @Get('/for-relax')
+  getMusicForRelax() {
+    return this.musicService.getMusicForRelax();
+  }
+
   @UseGuards(AuthorizedGuard)
   @Get('info/:musicId')
   @HttpCode(200)

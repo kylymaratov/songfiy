@@ -1,21 +1,23 @@
 import { Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Request } from 'express';
 import { AuthorizedGuard } from 'src/guards/authorized.guard';
-import { UserEntity } from 'src/database/entities/user.entity';
+import { User } from 'src/decorators/user.decorator';
 
 @UseGuards(AuthorizedGuard)
 @Controller({ path: '/api/v1/users', version: 'v1' })
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Get('/info/:id')
-  getUserById(@Param() param: { id: number }) {
-    return this.usersService.getUserById(param.id);
+  @Get('/info')
+  getUserById(@User() user) {
+    return user.info;
   }
 
   @Get('session')
-  getMySession(@Req() req: Request) {
-    return req.session;
+  getMySession(@User() user) {
+    delete user.data;
+    delete user.info;
+
+    return user;
   }
 }

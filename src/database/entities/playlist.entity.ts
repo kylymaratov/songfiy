@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  PrimaryColumn,
 } from 'typeorm';
 import { UserDataEntity } from './user.data.entity';
 
@@ -12,6 +13,9 @@ import { UserDataEntity } from './user.data.entity';
 export class PlaylistEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @PrimaryColumn({ unique: true })
+  playlistId: string;
 
   @Column()
   name: string;
@@ -22,8 +26,8 @@ export class PlaylistEntity {
   @Column({ default: 0 })
   listenCount: number;
 
-  @Column({ default: 0 })
-  likes: number;
+  @Column('int', { array: true, default: [] })
+  likes: number[];
 
   @Column()
   isPrivate: boolean;

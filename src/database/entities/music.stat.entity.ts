@@ -6,8 +6,8 @@ export class MusicStatEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: 0 })
-  likes: number;
+  @Column('int', { array: true, default: [] })
+  likes: number[];
 
   @Column({ default: 0 })
   listenCount: number;

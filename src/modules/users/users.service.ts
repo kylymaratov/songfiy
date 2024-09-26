@@ -15,6 +15,8 @@ export class UsersService {
       relations: ['data', 'info'],
     });
 
+    delete user.password;
+
     return user;
   }
 }

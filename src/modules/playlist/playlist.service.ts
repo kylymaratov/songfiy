@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { v4 } from 'uuid';
 import { CreatePlaylistBodyDto } from './dto/create.playlist.dto';
 import { UserEntity } from 'src/database/entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,9 +22,9 @@ export class PlaylistService {
     private musicRepository: Repository<MusicEntity>,
   ) {}
 
-  async getPlaylist(user: UserEntity, id: number) {
+  async getPlaylist(user: UserEntity, playlistId: string) {
     const playlist = await this.playlistRepository.findOne({
-      where: { id: Number(id) },
+      where: { playlistId },
       relations: ['userData'],
     });
 
@@ -37,6 +38,14 @@ export class PlaylistService {
     return playlist;
   }
 
+  async getPublicPlaylists() {
+    const playlists = await this.playlistRepository.find({
+      where: { isPrivate: false },
+    });
+
+    return playlists;
+  }
+
   async createPlaylist(user: UserEntity, body: CreatePlaylistBodyDto) {
     const playlistCount = await this.playlistRepository.count({
       where: { userData: user.data },
@@ -45,6 +54,7 @@ export class PlaylistService {
     if (playlistCount >= 100) throw new BadRequestException();
 
     const newPlaylist = this.playlistRepository.create({
+      playlistId: v4(),
       userData: user.data,
       name: body.name,
       musicIds: [],
@@ -58,13 +68,13 @@ export class PlaylistService {
     return savedPlaylist;
   }
 
-  async deletePlaylist(user: UserEntity, id: number) {
+  async deletePlaylist(user: UserEntity, playlistId: string) {
     const result = await this.playlistRepository
       .createQueryBuilder()
       .delete()
       .from(PlaylistEntity)
-      .where('id = :id AND "userDataId" = :userId', {
-        id,
+      .where('playlistId = :playlistId AND "userDataId" = :userId', {
+        playlistId,
         userId: user.data.id,
       })
       .execute();
@@ -75,12 +85,12 @@ export class PlaylistService {
       );
     }
 
-    return { deletedId: id };
+    return { deletedId: playlistId };
   }
 
   async addToPlayist(user: UserEntity, body: AddToPlaylistBodyDto) {
     const playlist = await this.playlistRepository.findOne({
-      where: { id: body.playlistId, userData: user.data },
+      where: { playlistId: body.playlistId, userData: user.data },
     });
 
     if (!playlist) throw new NotFoundException();
@@ -103,6 +113,10 @@ export class PlaylistService {
   async getMyPlaylists(user: UserEntity) {
     const playlists = await this.playlistRepository.find({
       where: { userData: user.data },
+    });
+
+    playlists.forEach((playlist) => {
+      playlist.likes = playlist.likes.length as any;
     });
 
     return playlists;

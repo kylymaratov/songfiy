@@ -98,4 +98,10 @@ export class MusicSearcher extends Client {
 
     return songs;
   }
+
+  public async getRelatedMusic(musicId: string) {
+    const response = await this.getVideo(musicId);
+
+    console.log(response.related);
+  }
 }

@@ -142,9 +142,14 @@ export class MusicService {
     const musics = await this.musicRepository
       .createQueryBuilder('music')
       .leftJoinAndSelect('music.stat', 'stat')
-      .orderBy('stat.likes', 'DESC')
+      .addSelect('array_length(stat.likes, 1)', 'likes')
+      .orderBy('likes', 'DESC')
       .take(limit)
       .getMany();
+
+    musics.forEach((music) => {
+      music.stat.likes = music.stat.likes.length as any;
+    });
 
     return musics;
   }
@@ -168,5 +173,11 @@ export class MusicService {
       .getMany();
 
     return musics;
+  }
+
+  async getMusicForRelax() {
+    const musics = await this.musicSearcher.getRelatedMusic('');
+
+    console.log(musics);
   }
 }

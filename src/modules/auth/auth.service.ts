@@ -34,6 +34,8 @@ export class AuthService {
 
     const candidate = await this.userRepostiory.findOne({ where: { email } });
 
+    console.log(candidate);
+
     if (candidate) throw new ConflictException('User exists');
 
     const hashedPassword = await this.passwordGenerator.generate(password);

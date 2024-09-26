@@ -18,6 +18,9 @@ export class UserInfoEntity {
   @Column({ nullable: true })
   lastname: string;
 
+  @Column({ nullable: true })
+  about: string;
+
   @OneToOne(() => UserEntity, (user) => user.info)
   user: UserEntity;
 }

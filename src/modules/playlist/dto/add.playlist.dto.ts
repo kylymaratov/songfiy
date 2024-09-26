@@ -2,7 +2,7 @@ import { IsNotEmpty } from 'class-validator';
 
 export class AddToPlaylistBodyDto {
   @IsNotEmpty()
-  playlistId: number;
+  playlistId: string;
 
   @IsNotEmpty()
   musicIds: string[];

@@ -15,6 +15,12 @@ export class UserDataEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ default: 0 })
+  listenedCount: number;
+
+  @Column({ nullable: true })
+  listenNow: string;
+
   @Column('text', { array: true, default: [] })
   favorites: string[];
 
