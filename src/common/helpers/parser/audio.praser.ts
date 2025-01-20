@@ -27,12 +27,17 @@ export class AudioParser {
         `downloading-[${songId}]`,
       );
 
-      if (alreadyDownloading)
+      if (alreadyDownloading) {
         throw new Error('Song already downloading please wait');
+      }
 
       await this.redis.set(`downloading-[${songId}]`, 'true');
 
       const buffer = await this.startDownload(songId, quality);
+
+      if (!buffer.length) {
+        throw new Error('Error while downloading song, please try later.');
+      }
 
       await this.redis.setex(`cached-song-[${songId}]`, this.ttl, buffer);
 
@@ -63,13 +68,18 @@ export class AudioParser {
       ]);
 
       process.stdout.on('data', (chunk: Buffer) => {
-        console.log(chunk);
         chunks.push(chunk);
       });
 
       process.stdout.on('end', () => {
         const buffer = Buffer.concat(chunks);
         resolve(buffer);
+      });
+
+      process.stdout.on('error', (err) => {
+        reject(
+          new Error(`Process encountered an error: ${err.message || err}`),
+        );
       });
 
       process.on('exit', (code) => {

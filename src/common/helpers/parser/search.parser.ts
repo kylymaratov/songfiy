@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Client, Video, VideoCompact } from 'youtubei';
 //
-import { Convertion } from 'src/common/utils/convert.util';
+import { ConvertUtil } from 'src/common/utils/convert.util';
 import { SONG_TITLE_KEYOWARDS } from 'src/common/constants/keywoards';
 import { REGEXP } from 'src/common/constants/regexp';
 
@@ -11,7 +11,7 @@ export class SearchParser {
   private readonly MIN_SONG_DURATION: number = 60;
   private readonly client: Client = new Client();
 
-  constructor(@Inject(Convertion) private convertion: Convertion) {}
+  constructor(@Inject(ConvertUtil) private convertion: ConvertUtil) {}
 
   public searchSameSongs() {}
 

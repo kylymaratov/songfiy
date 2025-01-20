@@ -4,7 +4,7 @@ import { CYRILIC_TO_LATIN_MAP } from '../constants/dictionary';
 import { REGEXP } from '../constants/regexp';
 
 @Injectable()
-export class Convertion {
+export class ConvertUtil {
   public convertDate(textDate: string) {
     const date = new Date();
     const match = textDate.match(REGEXP.TEXT_DATE);

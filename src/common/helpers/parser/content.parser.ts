@@ -8,7 +8,7 @@ import { REGEXP } from 'src/common/constants/regexp';
 import { URLS } from 'src/common/constants/urls';
 import { apiEnv } from 'src/common/settings/api.env';
 import { TrendingParseResult } from 'src/common/types/youtube.api';
-import { Convertion } from 'src/common/utils/convert.util';
+import { ConvertUtil } from 'src/common/utils/convert.util';
 import { SongTypes } from 'src/modules/v1/song/types/song.types';
 import { Client } from 'youtubei';
 
@@ -16,7 +16,7 @@ import { Client } from 'youtubei';
 export class ContentParser {
   private client: Client = new Client();
 
-  constructor(@Inject(Convertion) private convertion: Convertion) {}
+  constructor(@Inject(ConvertUtil) private convertion: ConvertUtil) {}
 
   public async getInfo(songId: string) {
     const song = await this.client.getVideo(songId);
