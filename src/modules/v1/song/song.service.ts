@@ -60,10 +60,13 @@ export class SongService {
 
     const buffer = await this.audioParser.download(songId, quality);
 
-    const song = await this.contentParser.getInfo(songId);
+    // const song = await this.contentParser.getSongInfo(songId);
 
     res.setHeader('Content-Type', 'audio/mpeg');
-    res.setHeader('Content-Disposition', 'inline; filename=' + song.title);
+    // res.setHeader(
+    //   'Content-Disposition',
+    //   `inline; filename=${song.title}_${song.id}`,
+    // ),
     res.setHeader('cache-control', 'no-store');
 
     res.send(buffer);

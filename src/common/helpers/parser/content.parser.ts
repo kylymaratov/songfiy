@@ -18,11 +18,14 @@ export class ContentParser {
 
   constructor(@Inject(ConvertUtil) private convertion: ConvertUtil) {}
 
-  public async getInfo(songId: string) {
+  /* Dont work */
+  /*public async getSongInfo(songId: string) {
     const song = await this.client.getVideo(songId);
 
+     song.title = this.convertion.convertCyrilicLatin(song.title);
+
     return song;
-  }
+   }*/
 
   public async getTrendingSongs(
     regionCode: string,
