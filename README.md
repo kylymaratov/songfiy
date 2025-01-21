@@ -12,4 +12,4 @@ Api is running.
 
 You can open API documentaion in url: [http://localhost:5000/docs]
 
-For this API to work correctly you need to install yt-dlp python library from [https://github.com/yt-dlp/yt-dlp].
+For this API to work correctly you need to install yt-dlp python library from [Yt-dlp](https://github.com/yt-dlp/yt-dlp).
