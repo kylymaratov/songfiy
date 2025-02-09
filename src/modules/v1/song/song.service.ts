@@ -11,7 +11,7 @@ import { TrendingSongsDto } from './dto/trending.songs.dto';
 import { SearchParser } from 'src/common/helpers/parser/search.parser';
 import { AudioParser } from 'src/common/helpers/parser/audio.praser';
 import { ContentParser } from 'src/common/helpers/parser/content.parser';
-import { SearchSongsResponse } from 'src/common/types/http.response';
+import { SearchSongsResponse } from 'src/common/types/http.repsonse.types';
 import { SongTypes } from './types/song.types';
 
 @Injectable()
