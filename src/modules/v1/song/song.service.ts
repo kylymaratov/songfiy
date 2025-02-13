@@ -5,14 +5,13 @@ import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
 //
 import { SearchSongsDto } from './dto/search.songs.dto';
-import { DownloadSongDto } from './dto/download.song.dto';
 import { ListenSongDto } from './dto/listen.song.dto';
 import { TrendingSongsDto } from './dto/trending.songs.dto';
-import { SearchParser } from 'src/common/helpers/parser/search.parser';
-import { AudioParser } from 'src/common/helpers/parser/audio.praser';
-import { ContentParser } from 'src/common/helpers/parser/content.parser';
-import { SearchSongsResponse } from 'src/common/types/http.repsonse.types';
+import { SearchParser } from 'src/parsers/ytb-parser/helpers/search.parser';
+import { AudioParser } from 'src/parsers/ytb-parser/helpers/audio.praser';
+import { ContentParser } from 'src/parsers/ytb-parser/helpers/content.parser';
 import { SongTypes } from './types/song.types';
+import { SearchSongsResponse } from './types/song.repsonse.types';
 
 @Injectable()
 export class SongService {
@@ -53,23 +52,6 @@ export class SongService {
       title: `${songs.length} songs founded by query: ${query}`,
       songs,
     };
-  }
-
-  public async downloadSong(query: DownloadSongDto, res: Response) {
-    const { songId, quality } = query;
-
-    const buffer = await this.audioParser.download(songId, quality);
-
-    // const song = await this.contentParser.getSongInfo(songId);
-
-    res.setHeader('Content-Type', 'audio/mpeg');
-    // res.setHeader(
-    //   'Content-Disposition',
-    //   `inline; filename=${song.title}_${song.id}`,
-    // ),
-    res.setHeader('cache-control', 'no-store');
-
-    res.send(buffer);
   }
 
   public async listenSong(query: ListenSongDto, req: Request, res: Response) {

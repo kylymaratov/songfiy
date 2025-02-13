@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { SONG_TITLE_KEYOWARDS } from 'src/parsers/constants/keywoards';
+import { REGEXP } from 'src/parsers/constants/regexp';
+import { ConvertUtil } from 'src/parsers/utils/convert.util';
 import { Client, Video, VideoCompact } from 'youtubei';
 //
-import { ConvertUtil } from 'src/common/utils/convert.util';
-import { SONG_TITLE_KEYOWARDS } from 'src/common/constants/keywoards';
-import { REGEXP } from 'src/common/constants/regexp';
 
 @Injectable()
 export class SearchParser {

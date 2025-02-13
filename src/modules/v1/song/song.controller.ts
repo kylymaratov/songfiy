@@ -13,10 +13,8 @@ import { Request, Response } from 'express';
 //
 import { SearchSongsDto } from './dto/search.songs.dto';
 import { SongService } from './song.service';
-import { DownloadSongDto } from './dto/download.song.dto';
 import { ListenSongDto } from './dto/listen.song.dto';
 import { TrendingSongsDto } from './dto/trending.songs.dto';
-import { DownloadGuard } from 'src/common/guards/download.guard';
 
 @Controller('song')
 export class SongController {
@@ -25,13 +23,6 @@ export class SongController {
   @Get('trending')
   public getTrendingSongs(@Query() query: TrendingSongsDto) {
     return this.songService.getTredningSongs(query);
-  }
-
-  @UseGuards(DownloadGuard)
-  @Get('download')
-  @HttpCode(200)
-  public downloadSong(@Query() query: DownloadSongDto, @Res() res: Response) {
-    return this.songService.downloadSong(query, res);
   }
 
   @Get('listen')

@@ -4,13 +4,13 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import axios from 'axios';
-import { REGEXP } from 'src/common/constants/regexp';
-import { URLS } from 'src/common/constants/urls';
-import { apiEnv } from 'src/common/settings/api.env';
-import { TrendingParseResult } from 'src/common/types/youtubeapi.types';
-import { ConvertUtil } from 'src/common/utils/convert.util';
 import { SongTypes } from 'src/modules/v1/song/types/song.types';
 import { Client } from 'youtubei';
+import { REGEXP } from 'src/parsers/constants/regexp';
+import { ConvertUtil } from 'src/parsers/utils/convert.util';
+import { YoutubeTrendingParseResult } from '../types/youtube.api.types';
+import { URLS } from 'src/parsers/constants/urls';
+import { serverEnv } from 'src/common/server/server.env';
 
 @Injectable()
 export class ContentParser {
@@ -29,11 +29,13 @@ export class ContentParser {
 
   public async getTrendingSongs(
     regionCode: string,
-    limit,
+    limit: number,
   ): Promise<SongTypes[]> {
     try {
-      const response = await axios.get<TrendingParseResult>(
-        `${URLS.YOUTUBE_API}/videos?part=snippet,statistics,contentDetails&chart=mostPopular&videoCategoryId=10&regionCode=${regionCode}&maxResults=${limit}&key=${apiEnv.env.YOUTUBE_API_KEY}`,
+      const response = await axios.get<YoutubeTrendingParseResult>(
+        `${
+          URLS.YOUTUBE_API
+        }/videos?part=snippet,statistics,contentDetails&chart=mostPopular&videoCategoryId=10&regionCode=${regionCode}&maxResults=${limit}&key=${serverEnv.env.YOUTUBE_API_KEY}`,
       );
 
       return this.formatData(response.data);
@@ -44,7 +46,7 @@ export class ContentParser {
     }
   }
 
-  private formatData(data: TrendingParseResult): SongTypes[] {
+  private formatData(data: YoutubeTrendingParseResult): SongTypes[] {
     return data.items.map((item) => {
       const { artist, author, title } = this.exctractNamesFromTitle(
         item.snippet.title,

@@ -2,8 +2,8 @@ import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import { spawn } from 'child_process';
 import Redis from 'ioredis';
+import { URLS } from '../../constants/urls';
 //
-import { URLS } from 'src/common/constants/urls';
 
 @Injectable()
 export class AudioParser {

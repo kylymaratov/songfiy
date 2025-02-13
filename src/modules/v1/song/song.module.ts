@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 //
 import { SongController } from './song.controller';
 import { SongService } from './song.service';
-import { ParserModule } from 'src/common/helpers/parser/parser.module';
+import { YoutubeParserModule } from 'src/parsers/ytb-parser';
 
 @Module({
-  imports: [ParserModule],
+  imports: [YoutubeParserModule],
   controllers: [SongController],
   providers: [SongService],
 })

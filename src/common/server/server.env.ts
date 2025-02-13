@@ -4,14 +4,14 @@ config();
 
 export type ApiVersion = 'v1' | 'v2';
 
-export interface ApiEnv {
+export interface ServerEnv {
   env: NodeJS.ProcessEnv;
   isProd: boolean;
   apiVersion: ApiVersion;
   protocol: 'http' | 'https';
 }
 
-export const apiEnv: ApiEnv = {
+export const serverEnv: ServerEnv = {
   env: process.env,
   isProd: process.env.NODE_ENV === 'production',
   apiVersion: 'v1',

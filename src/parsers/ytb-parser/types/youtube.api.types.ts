@@ -56,7 +56,7 @@ interface Items {
   };
 }
 
-export interface TrendingParseResult {
+export interface YoutubeTrendingParseResult {
   kind: string;
   etag: string;
   items: Items[];
