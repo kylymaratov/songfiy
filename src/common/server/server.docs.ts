@@ -4,7 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 export const setApiDocs = (app: INestApplication) => {
   const config = new DocumentBuilder()
     .setTitle('Songfiy API')
-    .setDescription('Free music streaming API')
+    .setDescription('Easy music streaming API')
     .setVersion('1.0')
     .build();
 

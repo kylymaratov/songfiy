@@ -6,6 +6,9 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Post('create')
+  public createUser() {}
+
   @Get('google')
   googleAuth() {}
 }
