@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-//
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './api/exceptions/http.exception.filter';
 import { setApiCors } from './api/options/api.cors';

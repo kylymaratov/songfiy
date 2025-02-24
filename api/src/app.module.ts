@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { RedisModule as IORedisModule } from '@nestjs-modules/ioredis';
-//
 import { AuthModule } from './modules/v1/auth/auth.module';
 import { UserModule } from './modules/v1/user/user.module';
 import { SongModule } from './modules/v1/song/song.module';

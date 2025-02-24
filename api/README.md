@@ -1,4 +1,4 @@
-## YTM (Unofficial Youtube Music API)
+## SongfiyAPI (Unofficial Youtube Music API)
 
 This api created for free listen and download songs from Youtube Music.
 
